@@ -45,17 +45,25 @@ spec:
           livenessProbe:
             tcpSocket:
               port: {{ .Values.container.tcpPort }}
-            initialDelaySeconds: 10
-            periodSeconds: 5
-          readinessProbe:
-            exec:
-              command:
-                - "mysqlcheck"
-                - "--password={{ .Values.container.mysqlRootPassword }}"
-                - "{{ .Values.container.mysqlDatabase }}"
-                - "{{ .Values.container.mysqlReadyTableName }}"
-            initialDelaySeconds: 20
-            periodSeconds: 30
+            initialDelaySeconds: 90
+            periodSeconds: 20
+            timeoutSeconds: 60
+            failureThreshold: 3
+          # readinessProbe:
+          #   # exec:
+          #   #   command:
+          #   #     - "mysqlcheck"
+          #   #     - "--password={{ .Values.container.mysqlRootPassword }}"
+          #   #     - "{{ .Values.container.mysqlDatabase }}"
+          #   #     - "{{ .Values.container.mysqlReadyTableName }}"
+          #   # initialDelaySeconds: 20
+          #   # periodSeconds: 30
+          #   tcpSocket:
+          #     port: {{ .Values.container.tcpPort }}
+          #   initialDelaySeconds: 90
+          #   periodSeconds: 20
+          #   timeoutSeconds: 60
+          #   failureThreshold: 3
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
